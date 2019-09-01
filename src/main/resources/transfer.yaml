@@ -1,0 +1,372 @@
+openapi: "3.0.0"
+info:
+  description: Money transfer api for Revolut.
+  version: beta
+  title: Transfer api
+  termsOfService: http://revolut.com/terms/
+  contact:
+    email: gasmyrmougang@gmail.com
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+paths:
+  /transactions:
+    get:
+      summary: Returns  all transactions
+      description: Returns all transactions
+      operationId: getTransactions
+      responses:
+        "200":
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties:
+                  type: integer
+                  format: int32
+  /transaction:
+    post:
+      summary: Perform new transaction from one account to another.
+      description: Perform new transaction from one account to another. Both accounts must exist.
+      operationId: addTransaction
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Transaction"
+        description: Transaction object that needs to be added to the storage
+      responses:
+        "200":
+          description: Succefully perfomed
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
+        "405":
+          description: Invalid input
+
+  "/transaction/{transactionId}":
+    delete:
+      summary: Remove transaction
+      description: Remove existing transaction
+      operationId: removeTransaction
+      parameters:
+        - name: transactionId
+          in: path
+          description: The id of the transaction that needs to be deleted
+          required: true
+          schema:
+            type: string
+      responses:
+        "400":
+          description: Invalid transactionId supplied
+        "404":
+          description: Transaction not found
+    get:
+      summary: Get transaction by id
+      description: Returns a single transaction
+      operationId: getTransaction
+      parameters:
+        - name: transactionId
+          in: path
+          description: Id of the transaction to return
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        "200":
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Transaction"
+        "400":
+          description: Invalid ID supplied
+        "404":
+          description: Transaction not found
+    put:
+      summary: Update an existing transaction
+      description: Update existing transaction
+      operationId: updateTransaction
+      parameters:
+        - name: transactionId
+          in: path
+          description: Id of the transaction to return
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Transaction"
+        description: Transaction object that needs to be edited.
+        required: true
+      responses:
+        "400":
+          description: Invalid ID supplied
+        "404":
+          description: Transaction not found
+        "405":
+          description: Validation exception
+  /accounts:
+    get:
+      summary: Returns  all accounts
+      description: Returns all accounts
+      operationId: getAccounts
+      responses:
+        "200":
+          description: successful operation
+        "404":
+          description: No transaction found
+  /account:
+    post:
+      summary: Create an account
+      description: Create a new account
+      operationId: addAccount
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Account"
+        description: Account to be created
+        required: true
+      responses:
+        "200":
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Account"
+        "400":
+          description: Invalid account
+  "/account/{accountNumber}":
+      get:
+        summary: Retrieve account by account number
+        description: Get account by account number.
+        operationId: getAccount
+        parameters:
+          - name: accountNumber
+            in: path
+            description: AccountNumber of Account that needs to be fetched
+            required: true
+            schema:
+              type: integer
+              format: int64
+        responses:
+          "200":
+            description: successful operation
+            content:
+              application/json:
+                schema:
+                  $ref: "#/components/schemas/Account"
+          "400":
+            description: Invalid Account number supplied
+          "404":
+            description: Account not found
+      delete:
+        summary: Delete Account by accountNumber
+        description: Delete an Account by accountNumer
+        operationId: removeAccount
+        parameters:
+          - name: accountNumber
+            in: path
+            description: AccountNumber of the account that needs to be deleted
+            required: true
+            schema:
+              type: integer
+              format: int64
+        responses:
+          "400":
+            description: Invalid account number supplied
+          "404":
+            description: Account not found
+  /customers:
+    get:
+      summary: Returns  all customers
+      description: Returns all customers
+      operationId: getCustomers
+      responses:
+        "200":
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+  /customer:
+      post:
+        summary: Create new customer
+        description: Add new customer to the system.
+        operationId: addCustomer
+        requestBody:
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Customer"
+          description: Created new customer
+          required: true
+        responses:
+          default:
+            description: successful operation
+  "/customer/{username}":
+    get:
+      summary: Get customer by username
+      description: Retrieve customer by his username
+      operationId: getCustomer
+      parameters:
+        - name: username
+          in: path
+          description: The name that needs to be fetched.
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Customer"
+        "400":
+          description: Invalid username supplied
+        "404":
+          description: Customer not found
+    put:
+      summary: Updated customer
+      description: "Update "
+      operationId: updateCustomer
+      parameters:
+        - name: username
+          in: path
+          description: name that need to be updated
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Customer"
+        description: Updated customer object
+        required: true
+      responses:
+        "400":
+          description: Invalid user supplied
+        "404":
+          description: Customer not found
+    delete:
+      summary: Delete customer
+      description: Delete existing customer
+      operationId: removeCustomer
+      parameters:
+        - name: username
+          in: path
+          description: The name that needs to be deleted
+          required: true
+          schema:
+            type: string
+      responses:
+        "400":
+          description: Invalid username supplied
+        "404":
+          description: Customer not found
+servers:
+  - url: https://www.api.revolut.com/v1
+components:
+  schemas:
+    Story:
+      type: object
+      required:
+        - name
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+    Account:
+      type: object
+      properties:
+        accountNumber:
+          type: string
+          format: int64
+        balance:
+          type: number
+          format: double
+        status:
+          type: string
+          description: Account status.
+          enum:
+            - ACTIVE
+            - CLOSED
+        currency:
+          type: string
+          description: Account defaut currency.
+          enum:
+            - DOLLAR
+            - EUR
+        owner:
+          $ref: "#/components/schemas/Customer"
+    Customer:
+      type: object
+      required:
+        - userName
+        - firstName
+        - email
+        - phoneNumber
+      properties:
+        id:
+          type: integer
+          format: int64
+        userName:
+          type: string
+        password:
+          type: string
+        firstName:
+          type: string
+        lastName:
+          type: string
+        email:
+          type: string
+        phoneNumber:
+          type: string
+
+    Transaction:
+      type: object
+      required:
+        - sendingAccount
+        - receivingAccount
+        - amount
+      properties:
+        id:
+          type: integer
+          format: int64
+        sendingAccount:
+          $ref: "#/components/schemas/Account"
+        receivingAccount:
+          $ref: "#/components/schemas/Account"
+        amount:
+          type: number
+          format: double
+          example: 1.000.5
+        status:
+          type: string
+          description: Transaction status.
+          enum:
+            - STARTED
+            - PENDING
+            - CLOSED
+    ApiResponse:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+        type:
+          type: string
+        message:
+          type: string
