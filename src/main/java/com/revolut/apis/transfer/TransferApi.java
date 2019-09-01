@@ -7,7 +7,7 @@ import io.vertx.core.Launcher;
 import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
 
-public class MainVerticle extends AbstractVerticle {
+public class TransferApi extends AbstractVerticle {
   Logger logger = LoggerFactory.getLogger("=============MainVerticle");
   @Override
   public void start(Future<Void> future){
@@ -22,7 +22,7 @@ public class MainVerticle extends AbstractVerticle {
   }
 
   public static void main(String[] args) {
-    Launcher.executeCommand("run", MainVerticle.class.getName());
+    Launcher.executeCommand("run", TransferApi.class.getName());
   }
 
 
