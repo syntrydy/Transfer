@@ -11,6 +11,9 @@ public class Main {
 		System.out.println(
 				"Résultat addition de " + nombre1 + " + " + nombre2 + " = " + calculatrice.addition(nombre1, nombre2));
 
+		System.out.println(
+				"Résultat de " + nombre1 + " - " + nombre2 + " = " + calculatrice.soustraction(nombre1, nombre2));
+
 	}
 
 }
