@@ -16,7 +16,7 @@ public class Calculatrice {
 		return nombre1 * nombre2;
 	}
 
-	public double division(int nombre1, int nombre2) {
+	public double division(int nombre1, int nombre2) throws ArithmeticException {
 		return nombre1 / nombre2;
 	}
 
